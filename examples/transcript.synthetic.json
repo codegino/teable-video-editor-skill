@@ -1,0 +1,15 @@
+{
+  "audio_duration_secs": 5.0,
+  "language": "tl",
+  "review_status": "synthetic example, not a real transcript",
+  "words": [
+    {"text":"Subukan","start":0.2,"end":0.55},
+    {"text":"natin","start":0.6,"end":0.9},
+    {"text":"ang","start":0.95,"end":1.1},
+    {"text":"bagong","start":1.15,"end":1.5},
+    {"text":"captions.","start":1.55,"end":2.1},
+    {"text":"Mas","start":2.7,"end":2.95},
+    {"text":"madaling","start":3.0,"end":3.5},
+    {"text":"basahin.","start":3.55,"end":4.1}
+  ]
+}

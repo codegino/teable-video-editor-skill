@@ -1,0 +1,3 @@
+# Optional: needed only for the transcribe subcommand.
+# Runtime instructions and tests use the Python standard library.
+faster-whisper>=1.1,<2

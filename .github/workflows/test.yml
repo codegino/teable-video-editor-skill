@@ -1,0 +1,42 @@
+name: Test skill helpers
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Test helper and portable-profile behavior
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+      - name: Smoke-test profile reuse and SRT export
+        run: |
+          python scripts/style_profile.py build --answers examples/profile-answers.synthetic.json --out /tmp/my-video-style.md
+          python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/my-video-style.json
+          python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/my-video-style.json --out-dir /tmp/caption-demo
+      - name: Build installable package
+        run: python tools/package_skill.py
+      - name: Check committed package matches source
+        run: git diff --exit-code -- dist/teable-video-editor.skill
+      - name: Check package reproducibility
+        run: |
+          cp dist/teable-video-editor.skill /tmp/first.skill
+          python tools/package_skill.py
+          cmp /tmp/first.skill dist/teable-video-editor.skill
+      - uses: actions/upload-artifact@v4
+        if: matrix.python-version == '3.11'
+        with:
+          name: teable-video-editor-skill
+          path: dist/teable-video-editor.skill

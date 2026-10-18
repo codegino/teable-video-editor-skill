@@ -1,0 +1,46 @@
+# Local environments and credentials
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+*.pem
+*.key
+credentials*.json
+*token*.json
+
+# Python / Node / render caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+.cache/
+.hyperframes/
+.teable/
+
+# Private jobs, generated artifacts and media
+jobs/
+uploads/
+outputs/
+renders/
+video-projects/
+transcripts/
+private/
+dist/*
+*.mp4
+*.mov
+*.MOV
+*.webm
+*.mkv
+*.wav
+*.mp3
+*.m4a
+*.png
+*.jpg
+*.jpeg
+*.zip
+*.skill
+!dist/teable-video-editor.skill
+*.srt
+*.log
+.DS_Store

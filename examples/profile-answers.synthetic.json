@@ -1,0 +1,17 @@
+{
+  "name": "Example tutorial style",
+  "orientation": "vertical",
+  "language": "english",
+  "captions": "phrase_chunks",
+  "branding": false,
+  "intro": false,
+  "outro": false,
+  "pace": "natural",
+  "graphics": "balanced",
+  "transitions": "fade",
+  "color": "neutral",
+  "music": false,
+  "sound_effects": false,
+  "hook": true,
+  "delivery": "mp4_srt"
+}
