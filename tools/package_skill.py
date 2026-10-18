@@ -9,11 +9,15 @@ ROOT = Path(__file__).resolve().parents[1]
 NAME = 'teable-video-editor'
 FILES = [
     'SKILL.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
-    'references/my-style.json', 'references/editing-workflow.md',
+    'references/defaults.json', 'references/content-types.json', 'references/editing-workflow.md',
     'references/effects-and-branding.md', 'references/validation.md',
     'references/profile-setup.md',
     'scripts/video_tools.py', 'scripts/make_sfx.py', 'scripts/test_helpers.py',
     'scripts/style_profile.py', 'scripts/test_profiles.py',
+    'scripts/fixtures/transcripts.json', 'scripts/fixtures/v1-expected.json',
+    'scripts/fixtures/v1-neutral.md', 'scripts/fixtures/v1-code-gino.md', 'scripts/fixtures/v1-custom.md',
+    'scripts/fixtures/v1-keepall-square.md', 'scripts/fixtures/v1-legacy-marker.md',
+    'examples/code-gino.md',
 ]
 
 
@@ -33,7 +37,8 @@ def build(output):
     skill = payloads['SKILL.md'].decode('utf-8')
     if not skill.startswith('---\n') or f'name: {NAME}\n' not in skill.split('---', 2)[1]:
         raise ValueError('Skill metadata name is missing or unexpected')
-    json.loads(payloads['references/my-style.json'])
+    for relative in ('references/defaults.json', 'references/content-types.json'):
+        json.loads(payloads[relative])
     output = Path(output)
     if output.suffix != '.skill':
         raise ValueError('Output must have a .skill extension')

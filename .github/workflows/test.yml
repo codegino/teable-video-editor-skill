@@ -24,8 +24,9 @@ jobs:
       - name: Smoke-test profile reuse and SRT export
         run: |
           python scripts/style_profile.py build --answers examples/profile-answers.synthetic.json --out /tmp/my-video-style.md
-          python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/my-video-style.json
-          python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/my-video-style.json --out-dir /tmp/caption-demo
+          python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/job-style.json
+          python scripts/style_profile.py import examples/code-gino.md --out /tmp/code-gino-job-style.json
+          python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/job-style.json --out-dir /tmp/caption-demo
       - name: Build installable package
         run: python tools/package_skill.py
       - name: Check committed package matches source

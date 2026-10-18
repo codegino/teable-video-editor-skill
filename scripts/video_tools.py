@@ -6,7 +6,16 @@ import math
 import subprocess
 from pathlib import Path
 
-DEFAULT_STYLE = Path(__file__).resolve().parents[1] / 'references' / 'my-style.json'
+LEGACY_LANGUAGE_NAMES = {'english': 'en', 'tagalog': 'tl', 'taglish': 'auto'}
+PHRASE_ANIMATION = 'whole-chunk gentle fade/slide; all words visible together'
+
+
+def whisper_language(primary, secondary=()):
+    """Whisper `language` argument: None (auto-detect) for auto or mixed-language speech."""
+    primary = LEGACY_LANGUAGE_NAMES.get(primary, primary)
+    if primary == 'auto' or secondary:
+        return None  # auto-detect per segment; preserves code-switching
+    return primary
 
 
 def load(path):
@@ -53,7 +62,7 @@ def plan_cuts(transcript, style):
         raise ValueError('Invalid pause settings.')
     deletes = []
     long_only = cfg.get('trim_leading_trailing_only_when_long', True)
-    if words and cfg.get('trim_silence', True):
+    if words and cfg['style'] != 'keep_all':
         first = words[0]['start']
         head = max(float(cfg['head_pad_seconds']), guard)
         if first > head and (not long_only or first > threshold):
@@ -167,7 +176,7 @@ def caption_events(transcript, style):
         if end <= start:
             raise ValueError('Nonpositive caption duration; review word alignment.')
         event = {'text': text, 'start': start, 'end': round(end, 6), 'mode': mode,
-                 'animation': cfg['animation'] if mode == 'phrase_chunks' else 'single-word pop',
+                 'animation': PHRASE_ANIMATION if mode == 'phrase_chunks' else 'single-word pop',
                  'color': cfg['color'],
                  'center_y_fraction': group[0].get('center_y_fraction', cfg['center_y_fraction']),
                  'words': [dict(w) for w in group]}
@@ -199,12 +208,13 @@ def main():
     probe.add_argument('file'); probe.add_argument('--out', required=True)
     trans = sub.add_parser('transcribe')
     trans.add_argument('file'); trans.add_argument('--out', required=True)
-    trans.add_argument('--language', required=True, choices=['tagalog','english','taglish'])
+    trans.add_argument('--language', required=True, help='Whisper language code (en, tl, es, ...) or auto; legacy names english/tagalog/taglish accepted')
+    trans.add_argument('--secondary', nargs='*', default=[], help='Other languages mixed into the speech; forces auto-detection')
     trans.add_argument('--model', default='medium')
     trans.add_argument('--threads',type=int,default=4)
     for name in ['plan','captions']:
         p = sub.add_parser(name); p.add_argument('transcript'); p.add_argument('--out-dir', required=True)
-        p.add_argument('--style', required=True, help='Resolved style JSON imported from the selected Markdown profile')
+        p.add_argument('--style', required=True, help='Resolved job-style.json imported from the selected Markdown profile')
     args = parser.parse_args()
     if args.command == 'inspect':
         save(args.out, inspect_video(args.file))
@@ -214,7 +224,7 @@ def main():
         if not any(s.get('codec_type')=='audio' for s in probe['streams']):
             raise ValueError('No audio stream. Continue with a visual-only edit; do not fabricate speech.')
         model = WhisperModel(args.model, device='cpu', compute_type='int8', cpu_threads=args.threads)
-        language = {'tagalog':'tl','english':'en','taglish':None}[args.language]
+        language = whisper_language(args.language, args.secondary)
         segments, info = model.transcribe(args.file, language=language, task='transcribe',
                                          beam_size=5, word_timestamps=True, vad_filter=True)
         words=[]; sentences=[]
@@ -225,7 +235,8 @@ def main():
                               'probability':word.probability})
         save(args.out, {'source':str(Path(args.file).resolve()), 'text':' '.join(sentences),
                         'audio_duration_secs':float(probe['format']['duration']), 'words':words,
-                        'requested_language':args.language,'language':info.language,'model':args.model,
+                        'requested_language':args.language,'secondary_languages':args.secondary,
+                        'language':info.language,'model':args.model,
                         'review_status':'machine transcript; review uncertain words'})
     elif args.command == 'plan':
         edl, retimed = plan_cuts(load(args.transcript),load(args.style))

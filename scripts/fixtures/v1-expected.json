@@ -1,0 +1,317 @@
+{
+ "v1-neutral": [
+  {
+   "edl": {
+    "delete_ranges": [
+     {
+      "start": 0.0,
+      "end": 1.7,
+      "reason": "long leading silence"
+     },
+     {
+      "start": 3.525,
+      "end": 5.275,
+      "reason": "long internal silence"
+     },
+     {
+      "start": 7.925,
+      "end": 10.375,
+      "reason": "long internal silence"
+     }
+    ],
+    "keep_ranges": [
+     {
+      "start": 1.7,
+      "end": 3.525
+     },
+     {
+      "start": 5.275,
+      "end": 7.925
+     },
+     {
+      "start": 10.375,
+      "end": 12.0
+     }
+    ],
+    "edited_duration": 6.1
+   },
+   "captions": [
+    {
+     "text": "Hello there, friends.",
+     "start": 0.3,
+     "end": 1.78,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Ngayon try natin ito A.I. video",
+     "start": 2.05,
+     "end": 3.8,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "editing.",
+     "start": 3.8,
+     "end": 4.43,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Okay?",
+     "start": 4.7,
+     "end": 5.28,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    }
+   ]
+  },
+  {
+   "edl": {
+    "delete_ranges": [],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 6.0
+     }
+    ],
+    "edited_duration": 6.0
+   },
+   "captions": []
+  }
+ ],
+ "v1-code-gino": [
+  {
+   "edl": {
+    "delete_ranges": [
+     {
+      "start": 0.0,
+      "end": 1.7,
+      "reason": "long leading silence"
+     },
+     {
+      "start": 3.525,
+      "end": 5.275,
+      "reason": "long internal silence"
+     },
+     {
+      "start": 7.925,
+      "end": 10.375,
+      "reason": "long internal silence"
+     }
+    ],
+    "keep_ranges": [
+     {
+      "start": 1.7,
+      "end": 3.525
+     },
+     {
+      "start": 5.275,
+      "end": 7.925
+     },
+     {
+      "start": 10.375,
+      "end": 12.0
+     }
+    ],
+    "edited_duration": 6.1
+   },
+   "captions": [
+    {
+     "text": "Hello there, friends.",
+     "start": 0.3,
+     "end": 1.78,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Ngayon try natin ito A.I. video",
+     "start": 2.05,
+     "end": 3.8,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "editing.",
+     "start": 3.8,
+     "end": 4.43,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Okay?",
+     "start": 4.7,
+     "end": 5.28,
+     "mode": "phrase_chunks",
+     "center_y_fraction": 0.76
+    }
+   ]
+  },
+  {
+   "edl": {
+    "delete_ranges": [],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 6.0
+     }
+    ],
+    "edited_duration": 6.0
+   },
+   "captions": []
+  }
+ ],
+ "v1-custom": [
+  {
+   "edl": {
+    "delete_ranges": [
+     {
+      "start": 3.65,
+      "end": 5.15,
+      "reason": "long internal silence"
+     },
+     {
+      "start": 8.05,
+      "end": 10.25,
+      "reason": "long internal silence"
+     }
+    ],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 3.65
+     },
+     {
+      "start": 5.15,
+      "end": 8.05
+     },
+     {
+      "start": 10.25,
+      "end": 12.0
+     }
+    ],
+    "edited_duration": 8.3
+   },
+   "captions": [
+    {
+     "text": "Hello",
+     "start": 2.0,
+     "end": 2.45,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "there,",
+     "start": 2.45,
+     "end": 2.85,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "friends.",
+     "start": 2.85,
+     "end": 3.48,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Ngayon",
+     "start": 4.0,
+     "end": 4.35,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "try",
+     "start": 4.35,
+     "end": 4.55,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "natin",
+     "start": 4.55,
+     "end": 4.85,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "ito",
+     "start": 4.85,
+     "end": 5.05,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "A.I.",
+     "start": 5.05,
+     "end": 5.45,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "video",
+     "start": 5.45,
+     "end": 5.75,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "editing.",
+     "start": 5.75,
+     "end": 6.38,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    },
+    {
+     "text": "Okay?",
+     "start": 6.9,
+     "end": 7.48,
+     "mode": "single_word",
+     "center_y_fraction": 0.76
+    }
+   ]
+  },
+  {
+   "edl": {
+    "delete_ranges": [],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 6.0
+     }
+    ],
+    "edited_duration": 6.0
+   },
+   "captions": []
+  }
+ ],
+ "v1-keepall-square": [
+  {
+   "edl": {
+    "delete_ranges": [],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 12.0
+     }
+    ],
+    "edited_duration": 12.0
+   },
+   "captions": []
+  },
+  {
+   "edl": {
+    "delete_ranges": [],
+    "keep_ranges": [
+     {
+      "start": 0.0,
+      "end": 6.0
+     }
+    ],
+    "edited_duration": 6.0
+   },
+   "captions": []
+  }
+ ]
+}

@@ -19,17 +19,17 @@ Upstream cut-silences can shorten internal breaths to 0.14 seconds. That is more
 
 ## Helper commands
 
-Replace `<skill-dir>` with the installed path. Resolve the profile using `references/profile-setup.md` first. Always pass the imported job `style.json`; helpers must not silently apply the bundled Code Gino preset.
+Replace `<skill-dir>` with the installed path. Resolve the profile using `references/profile-setup.md` first. Always pass the resolved `job-style.json`; helpers have no built-in creator preset to fall back on.
 
 ```
 python <skill-dir>/scripts/video_tools.py inspect /path/input.mov --out /tmp/job/probe.json
-python <skill-dir>/scripts/video_tools.py transcribe /path/input.mov --language taglish --out /tmp/job/raw.json
-python <skill-dir>/scripts/video_tools.py plan /tmp/job/raw.json --style /tmp/job/style.json --out-dir /tmp/job/plan
-python <skill-dir>/scripts/video_tools.py captions /tmp/job/plan/retimed.json --style /tmp/job/style.json --out-dir /tmp/job/captions
+python <skill-dir>/scripts/video_tools.py transcribe /path/input.mov --language tl --secondary en --out /tmp/job/raw.json
+python <skill-dir>/scripts/video_tools.py plan /tmp/job/raw.json --style /tmp/job/job-style.json --out-dir /tmp/job/plan
+python <skill-dir>/scripts/video_tools.py captions /tmp/job/plan/retimed.json --style /tmp/job/job-style.json --out-dir /tmp/job/captions
 python <skill-dir>/scripts/make_sfx.py --out-dir /tmp/job/assets/sfx
 ```
 
-`--style /tmp/job/style.json` supplies the imported profile plus any per-job overrides. Resolve `language.default` before transcription; the command above illustrates Taglish, not a fixed default. Correct display words before generating caption events; keep timestamps and original text for audit. Proper names and Taglish split words deserve review. Merge tokenizer fragments into a real word only when supported, preserving the combined first start/last end. Do not silently convert English words to Tagalog or vice versa.
+`--style /tmp/job/job-style.json` supplies the resolved profile plus any per-job overrides. Resolve `language` before transcription: pass `--language` as the primary code (or `auto`) and `--secondary` for mixed speech. The command above illustrates Taglish, not a fixed default. Correct display words before generating caption events; keep timestamps and original text for audit. Proper names and Taglish split words deserve review. Merge tokenizer fragments into a real word only when supported, preserving the combined first start/last end. Do not silently convert English words to Tagalog or vice versa.
 
 These helpers do preparation, not the entire editorial process. The agent must apply the EDL, write the composition, place transitions, grade footage, and review the rendered MP4. Never present helper success as a completed video.
 
@@ -37,7 +37,7 @@ These helpers do preparation, not the entire editorial process. The agent must a
 
 - Probe color transfer/primaries and display matrix. HDR tags include smpte2084/PQ, arib-std-b67/HLG and Dolby Vision side data. Dolby Vision enhancement metadata is not preserved in an SDR export.
 - For supported iPhone HLG base-layer footage, a working FFmpeg filter is `zscale=t=linear:npl=100,format=gbrpf32le,tonemap=tonemap=hable:desat=0,zscale=p=bt709:t=bt709:m=bt709:r=tv,format=yuv420p`. Adapt input tags to actual metadata; never label a conversion correct solely because the command succeeded. Review skin and highlights.
-- Apply the selected color treatment after tone mapping; neutral profiles receive no creative orange/teal grade. Calibrate on representative source frames rather than hardcoding an aggressive LUT. The original video must remain available for comparison.
+- Apply the selected color treatment after tone mapping; `neutral` profiles receive no creative grade; `warm` and `cool` are subtle. Calibrate on representative source frames rather than hardcoding an aggressive LUT. The original video must remain available for comparison.
 - Normalize rotation once and avoid accidental double rotation.
 - Scale/frame to the selected profile's width and height (vertical, landscape or square). For other shapes, inspect a crop; if important subjects cannot fit, use foreground contain over a blurred background duplicate. Do not stretch.
 - Apply EDL keep ranges with paired `trim`/`atrim`, `setpts=PTS-STARTPTS`/`asetpts=PTS-STARTPTS`, then concat. Prefer a filter script to huge shell strings. Apply small audio seam treatment only within verified silent pads; no phoneme truncation.
@@ -46,7 +46,7 @@ These helpers do preparation, not the entire editorial process. The agent must a
 
 ## HyperFrames composition
 
-Write a fresh project DESIGN.md from the resolved `style.json`. Honor `branding.enabled`, individual intro/outro `enabled`, `hook.enabled`, `graphics.enabled`, `transitions.enabled`, `sound.music`, `sound.effects`, `color.style`, `captions.mode`, and `pace.trim_silence`. Off means off; explicit job requests can override it. Use local licensed fonts and local GSAP. A visible root composition has `id`, `data-composition-id`, `data-start="0"`, `data-duration`, and `data-width`/`data-height` matching the profile. Videos are muted/playsinline and audio is a sibling. Put video inside a **non-timed** wrapper for motion. Register a synchronous paused GSAP timeline in `window.__timelines['<exact-id>']`. Do not drive media playback from GSAP.
+Write a fresh project DESIGN.md from the resolved `job-style.json`. Honor `branding.enabled`, individual intro/outro `enabled`, `hook.enabled`, `graphics.mode`, `transitions.style`, `audio.mix`, `audio.sound_effects`, `color.style`, `captions.mode`, `text_overlays.mode`, and `pace.style` (`keep_all` means no silence cuts). Off means off; explicit job requests can override it. Use local licensed fonts and local GSAP. A visible root composition has `id`, `data-composition-id`, `data-start="0"`, `data-duration`, and `data-width`/`data-height` matching the profile. Videos are muted/playsinline and audio is a sibling. Put video inside a **non-timed** wrapper for motion. Register a synchronous paused GSAP timeline in `window.__timelines['<exact-id>']`. Do not drive media playback from GSAP.
 
 In phrase mode, use one timed caption element per phrase chunk on the same nonoverlapping caption track. In `single_word`, use aligned single-word events; in `off`, skip visible captions and SRT. Read mode, font sizing, color, width, line count and entrance duration from the JSON. Each chunk carries the first word's onset and the last word's offset plus a short bounded hold. Show the complete chunk together; default to a gentle whole-chunk fade/slide, not per-word pops or karaoke. Preserve nested measured word timings for corrections. Use no more than two lines, actual font measurement, white text and a dark shadow; regroup before shrinking excessively. The framework ends event visibility. Avoid animating `display`/`visibility` or using infinite repeats. The profile or a per-job request can explicitly select `single_word`; phrase chunks remain the suggested starting point.
 
@@ -80,4 +80,4 @@ Return the final video(s) and the profile-selected SRT/project outputs, with sho
 
 ## Editing this skill
 
-The selected portable Markdown profile is the saved style source; `references/my-style.json` is an example preset. Profile changes produce a revised Markdown file, not a replacement skill. Implementation changes may require staging, testing and packaging the installed skill. Per-video changes affect the job copy only. Do not silently bind credentials or persist external account grants.
+The selected portable Markdown profile is the saved style source; `examples/code-gino.md` is an example profile. Profile changes produce a revised Markdown file, not a replacement skill. Implementation changes may require staging, testing and packaging the installed skill. Per-video changes affect the job copy only. Do not silently bind credentials or persist external account grants.

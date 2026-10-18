@@ -6,10 +6,13 @@ import tempfile
 import unittest
 import wave
 from pathlib import Path
-from video_tools import DEFAULT_STYLE, plan_cuts, caption_events
+from video_tools import plan_cuts, caption_events
+from style_profile import import_profile, resolve
 from make_sfx import make
 
-STYLE=json.loads(DEFAULT_STYLE.read_text())
+# Speech-led footage: the talking-head preset over neutral defaults.
+STYLE=resolve({'content_type':'talking-head'})
+EXAMPLE=Path(__file__).resolve().parents[1]/'examples'/'code-gino.md'
 
 
 def transcript(words,duration=10):
@@ -128,19 +131,17 @@ class EditingChecks(unittest.TestCase):
         with self.assertRaises(ValueError):
             caption_events(transcript([('A',.2,.2),('B',.2,.5)],1),STYLE)
 
-    def test_settings_match_user_brief(self):
-        self.assertEqual((STYLE['format']['width'],STYLE['format']['height']),(1080,1920))
-        self.assertFalse(STYLE['sound']['music'])
-        self.assertFalse(STYLE['sound']['pop_every_caption_word'])
-        self.assertFalse(STYLE['delivery']['publish_automatically'])
-        self.assertEqual(STYLE['captions']['mode'],'phrase_chunks')
-        self.assertEqual(STYLE['captions']['max_lines'],2)
-        self.assertEqual(STYLE['branding']['palette']['background'],'#102B2D')
-        self.assertEqual(STYLE['branding']['palette']['accent'],'#EFA269')
-        self.assertEqual(STYLE['branding']['website'],'carlogino.com')
-        self.assertEqual(STYLE['branding']['handle'],'@codegino')
-        self.assertTrue(STYLE['graphics']['spoken_effects_are_brief'])
-        self.assertTrue(STYLE['verification']['video_only_frame_hashes'])
+    def test_code_gino_example_matches_its_brief(self):
+        style,_=import_profile(EXAMPLE.read_text())
+        self.assertEqual((style['format']['width'],style['format']['height']),(1080,1920))
+        self.assertEqual(style['audio']['mix'],'original')
+        self.assertEqual(style['captions']['mode'],'phrase_chunks')
+        self.assertEqual(style['captions']['max_lines'],2)
+        self.assertEqual(style['branding']['palette']['background'],'#102B2D')
+        self.assertEqual(style['branding']['palette']['accent'],'#EFA269')
+        self.assertEqual(style['branding']['website'],'carlogino.com')
+        self.assertEqual(style['branding']['handle'],'@codegino')
+        self.assertEqual(style['transitions']['style'],'swipe')
 
     def test_generated_effects_are_short_and_valid(self):
         with tempfile.TemporaryDirectory() as temp:

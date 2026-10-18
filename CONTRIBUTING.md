@@ -4,9 +4,9 @@ This skill targets Teable's AI chat, sandbox tools, attachments and skill instal
 
 ## Profile behavior
 
-Keep `SKILL.md`, `references/profile-setup.md`, profile helpers and tests consistent. A selected portable Markdown profile supplies the user's preferences. `references/my-style.json` is the explicitly selected Code Gino example preset, not every new user's identity.
+Keep `SKILL.md`, `references/profile-setup.md`, profile helpers and tests consistent. A selected portable Markdown profile supplies the user's preferences. Settings resolve as `references/defaults.json` → `references/content-types.json` preset → sparse profile → per-video changes. `examples/code-gino.md` is an example profile, not a built-in preset. Fixed editing rules belong in `SKILL.md` and helper code, not in profile settings.
 
-Preserve Create/Reuse routing, setup without video, metadata-assisted defaults, portable profile import, and temporary per-video overrides. Never silently apply Code Gino's branding to a new user.
+Preserve Create/Reuse routing, setup without video, metadata-assisted defaults, portable profile import, and temporary per-video overrides. Never silently apply the Code Gino example's branding to a new user. Keep v1 profiles importing: `scripts/fixtures/` records v1 outputs that migrated profiles must reproduce.
 
 ## Test and package
 
@@ -15,8 +15,8 @@ Helper tests and packaging use Python 3.10+ and the standard library:
 ```sh
 python -m unittest discover -s scripts -p 'test_*.py'
 python scripts/style_profile.py build --answers examples/profile-answers.synthetic.json --out /tmp/my-video-style.md
-python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/my-video-style.json
-python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/my-video-style.json --out-dir /tmp/caption-demo
+python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/job-style.json
+python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/job-style.json --out-dir /tmp/caption-demo
 python tools/package_skill.py
 ```
 

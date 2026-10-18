@@ -1,0 +1,118 @@
+{
+  "schema": 2,
+  "name": "My style",
+  "content_type": "other",
+  "format": {
+    "orientation": "vertical",
+    "aspect_ratio": "9:16",
+    "width": 1080,
+    "height": 1920,
+    "fps": "source",
+    "video_bitrate": "5M"
+  },
+  "language": {
+    "primary": "auto",
+    "secondary": [],
+    "mode": "auto"
+  },
+  "captions": {
+    "mode": "phrase_chunks",
+    "target_words_min": 3,
+    "max_words": 6,
+    "max_chars": 64,
+    "max_lines": 2,
+    "max_chars_per_line": 34,
+    "max_duration_seconds": 3.0,
+    "pause_break_seconds": 0.45,
+    "sentence_breaks": ".!?…",
+    "phrase_breaks": ",;:",
+    "entrance_seconds": 0.12,
+    "pop_seconds": 0.09,
+    "pop_scale_from": 0.86,
+    "color": "#FFFFFF",
+    "shadow": "0 4px 12px rgba(0,0,0,0.8)",
+    "font": "locally licensed bold sans-serif",
+    "font_size_px": 72,
+    "min_font_size_px": 48,
+    "max_width_px": 900,
+    "center_y_fraction": 0.76,
+    "raised_center_y_fraction": 0.66,
+    "safe_horizontal_px": 90,
+    "safe_bottom_px": 200,
+    "max_hold_after_word_seconds": 0.18
+  },
+  "text_overlays": {
+    "mode": "none"
+  },
+  "branding": {
+    "enabled": false,
+    "name": "",
+    "website": "",
+    "handle": "",
+    "palette": {
+      "background": "#111827",
+      "accent": "#F59E0B",
+      "secondary_accent": "#3B82F6",
+      "primary_text": "#FFFFFF",
+      "secondary_text": "#D1D5DB"
+    },
+    "intro": {
+      "enabled": false,
+      "seconds": 2.5
+    },
+    "outro": {
+      "enabled": false,
+      "seconds": 1.8
+    }
+  },
+  "hook": {
+    "enabled": false,
+    "first_seconds": 3.0,
+    "max_words": 7
+  },
+  "pace": {
+    "style": "gentle",
+    "rhythm": "scene",
+    "silence_threshold_seconds": 2.0,
+    "retained_pause_seconds": 0.7,
+    "head_pad_seconds": 0.3,
+    "tail_pad_seconds": 0.5,
+    "word_guard_seconds": 0.1,
+    "trim_leading_trailing_only_when_long": true
+  },
+  "graphics": {
+    "mode": "minimal"
+  },
+  "transitions": {
+    "style": "none",
+    "seconds": 0.2,
+    "minimum_spacing_seconds": 3.0
+  },
+  "color": {
+    "style": "neutral"
+  },
+  "audio": {
+    "mix": "original",
+    "sound_effects": false,
+    "effects_relative_to_speech_db": -16,
+    "speech_target_lufs": -16,
+    "mix_target_lufs": -14,
+    "max_true_peak_db": -1.5,
+    "highpass_hz": 70
+  },
+  "delivery": {
+    "mode": "mp4_srt",
+    "subtitles_srt": true,
+    "editable_project_zip": false
+  },
+  "verification": {
+    "beat_tolerance_frames": 1,
+    "target_duration_tolerance_seconds": 0.5,
+    "reported_stall_check_window_seconds": 4
+  },
+  "style_reference": {
+    "url_or_name": "",
+    "reviewed_traits": "",
+    "status": "not supplied"
+  }
+}

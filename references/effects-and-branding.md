@@ -46,7 +46,7 @@ Keep a persistent source layer or explicit source continuation underneath timed 
 
 ## Branding the user approved
 
-Read colors, identity and timing from `branding` in the resolved job `style.json`. If branding is disabled, omit branded intro/outro; respect their individual switches too. The bundled Code Gino preset uses deep teal, peach, white and pale teal, but must not supply another user's website or handle. Follow the user's selected profile palette.
+Read colors, identity and timing from `branding` in the resolved `job-style.json`. If branding is disabled, omit branded intro/outro; respect their individual switches too. The Code Gino example profile must not supply another user's website, handle or palette. Follow the user's selected profile palette.
 
 - Opening: brief truthful hook and handle over live footage, gentle entrance, speech starts immediately. Use the palette for accents/shadow/treatment; avoid an opaque intro slate delaying the recording.
 - Outro, when enabled: short card using the profile's palette, website and handle; omit blank identity fields. Hold long enough to read through the final frame. No long blank fade or unnecessary extra CTA.
