@@ -39,9 +39,9 @@ the work. Your profile overrides its house style:
 | --- | --- |
 | Cuts | Removes dead air, breaths, false starts and retakes |
 | Hook | Big text in the first 3 seconds |
-| Motion graphics | Animated cards and overlays, plus zoom-ins that keep your face clear |
+| Motion graphics | Animated cards, overlays and B-roll around you (you stay on screen), plus zoom-ins that keep your face clear |
 | Captions | Natural phrases, word by word, key words, subtitles or none, in your position and colors |
-| Color | Natural, warm, cool, black and white, or orange and teal |
+| Color | Your footage's own look by default; subtle warm, cool, black and white or orange and teal if you choose |
 | Sound | Light sound effects and a quiet music bed from music you attach |
 
 Speech is transcribed inside the sandbox; your footage is not sent to a transcription service.

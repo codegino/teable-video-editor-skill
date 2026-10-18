@@ -7,8 +7,9 @@
 - Pace: natural (keep short pauses).
 - Mistakes: cut retakes, false starts and stutters.
 - Graphics: some motion cards; build any effect I describe in the video. Zoom-ins on.
+- Speaker on screen: always visible; graphics as overlays, split screen or insets.
 - Transitions: short swipes.
-- Color: warm.
+- Color: natural, keep the footage's own look.
 - Sound: original audio with light sound effects, no music.
 - Branding: Code Gino, carlogino.com, @codegino. Colors: background #102B2D, accent #EFA269,
   secondary #2B8F96, text #FFFFFF / #C4D9D9. Short intro over live footage and a short outro card.

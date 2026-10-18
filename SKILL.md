@@ -46,7 +46,10 @@ To create one, ask two or three rounds of short multiple-choice questions (A, B,
 - Pace: tight (cut every pause and breath, default) or natural (keep short pauses).
 - Mistakes: cut retakes, false starts and stutters (default), or keep everything said.
 - Graphics: editor's house style with motion cards and zoom-ins (default), some, or minimal.
-- Color: natural, warm, cool, black and white, or orange and teal.
+- Speaker on screen: always visible, with graphics and B-roll as overlays, split screen or insets (default),
+  or allow full-screen B-roll cutaways.
+- Color: natural, keep the footage's own look (default); or a subtle warm, cool, black and white, or orange
+  and teal look.
 - Sound: light sound effects plus a quiet music bed (default), effects only, or voice only.
 - Branding: none, or name, handle or website, colors, intro and/or outro.
 - Deliverables: MP4, plus SRT subtitles and/or the editable project.
@@ -69,7 +72,15 @@ sends footage elsewhere (ElevenLabs, Kie.ai, any cloud API). The default is to u
 3. `python3 <skill-dir>/scripts/transcribe.py engine/video-projects/<slug>/assets/raw.mp4 --language <code>`
    (Taglish: `--language tl --secondary en`). This writes `raw.json` and replaces the engine's ElevenLabs step.
    Fix names and obvious mishearings in the word texts; never translate.
-4. Read `my-video-style.md`. Rules beat style; style beats the engine's house style.
+4. Read `my-video-style.md`. Rules beat style; style beats the engine's house style. Unless the profile or
+   request says otherwise, these defaults also beat the engine's house style:
+   - **Light and color stay natural.** Do not grade, relight or restyle the footage: no exposure, contrast,
+     saturation, LUT or filter changes. Only HDR-to-SDR conversion, plus a small white-balance or exposure fix
+     when the source is clearly off. A chosen look (warm, cool, ...) stays subtle; compare against the source frame.
+   - **The speaker stays in the scene.** When someone talks to the camera, keep them visible for the whole
+     video. Put graphics, cards and B-roll in overlays, a split screen or an inset beside or around them, not
+     full-frame takeovers or cutaways. Never cover the face. Zoom-ins keep the whole face in frame. Full-screen
+     B-roll only when the profile allows it or the user asks.
 5. Read `engine/AGENTS.md`, then follow the engine skill `short-form-edit` for vertical or short videos (under
    3 minutes) or `edit-video` for long horizontal ones. It runs `cut-silences` and `cut-mistakes`; "edit this"
    approves the mistake cuts, so decide each candidate yourself (keep deliberate repetition) and mention notable
