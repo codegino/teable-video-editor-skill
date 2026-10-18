@@ -46,6 +46,14 @@ the work. Your profile overrides its house style:
 
 Speech is transcribed inside the sandbox; your footage is not sent to a transcription service.
 
+Brand colors apply to captions and graphics, not to your skin or the footage. For HDR recordings, the skill
+checks source color handling and caption brightness separately so preserving the picture does not leave
+white captions looking gray. See the [color and captions guide](references/color-and-captions.md).
+
+The optional [Code Gino profile](examples/code-gino.md) uses the green palette from carlogino.com, upper-third
+Taglish phrase captions, natural pacing, minimal graphics, and original voice only. It is an example you can
+choose, not the default branding for everyone. Redoing setup replaces old choices with your new profile.
+
 ## Notes become rules
 
 Watch the draft and give notes in plain words (English, Tagalog, Taglish). Lasting notes (“always…”, “never…”) are
