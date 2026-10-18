@@ -18,6 +18,7 @@ use (English, Tagalog or Taglish are all normal). Never assume they know editing
 | `/tmp/video-editor/outbox/` | Drafts and finals, named `<slug>-v1.mp4`, `<slug>-final.mp4`. |
 | `my-video-style.md` | The user's style and rules. The user keeps it and attaches it each session. |
 | `examples/code-gino.md` | An example profile. Use it only when the user attaches or picks it. |
+| `references/color-and-captions.md` | Source-color preservation, HDR exports, and readable caption graphics. |
 
 `engine/` has its own guide, `engine/AGENTS.md`, and skills in `engine/.agents/skills/<name>/SKILL.md`. Read them
 when a step says so. Paths in engine docs are relative to `engine/`, so run engine commands from there.
@@ -34,6 +35,8 @@ when a step says so. Paths in engine docs are relative to `engine/`, so run engi
 
 No profile attached? Ask once: **Create a profile** or **Reuse a profile** (skip if the request answers it).
 Reuse without a file: ask them to attach it. Setup without a video is fine.
+When the user asks to redo setup, collect a fresh profile and let their new choices replace the old ones.
+Do not carry over a previous palette, effects treatment, or sound choice that conflicts with the new profile.
 
 To create one, ask two or three rounds of short multiple-choice questions (A, B, C; recommended first):
 
@@ -51,10 +54,14 @@ To create one, ask two or three rounds of short multiple-choice questions (A, B,
 - Color: natural, keep the footage's own look (default); or a subtle warm, cool, black and white, or orange
   and teal look.
 - Sound: light sound effects plus a quiet music bed (default), effects only, or voice only.
-- Branding: none, or name, handle or website, colors, intro and/or outro.
+- Branding: none, or name, handle or website, colors, intro and/or outro. Brand colors style captions and
+  graphics only; they do not authorize a grade or exposure change on the footage. If the user supplies a
+  website, verify its actual palette and typography instead of guessing from its name.
 - Deliverables: MP4, plus SRT subtitles and/or the editable project.
 
 If a video is attached, render a 5-second sample of their captions on their own footage and adjust before saving.
+Check the footage's appearance and caption legibility separately. For HDR sources or a reported color shift,
+read `references/color-and-captions.md` before preparing the sample; do not fix dim text by brightening the video.
 Write `my-video-style.md` as short plain bullets, one per choice, in the user's words where they gave them,
 then a `## My rules` section (empty at first). Present it and say: "Save this file. Next time, attach it with
 your video and say: edit this." An older profile with a JSON settings block: read its choices, rewrite it in
@@ -67,11 +74,14 @@ and draft render. Do not stop for approval between steps. Ask first only for any
 sends footage elsewhere (ElevenLabs, Kie.ai, any cloud API). The default is to use none of them.
 
 1. Run setup if `engine/` is missing. Make a slug from the file name plus today's date. Never modify the original.
-2. From `engine/`: `npm run new-video -- <slug>`. Copy the source to `video-projects/<slug>/assets/raw.mp4`
-   (transcode with ffmpeg if it is not MP4, with no filters).
-3. `python3 <skill-dir>/scripts/transcribe.py engine/video-projects/<slug>/assets/raw.mp4 --language <code>`
-   (Taglish: `--language tl --secondary en`). This writes `raw.json` and replaces the engine's ElevenLabs step.
-   Fix names and obvious mishearings in the word texts; never translate.
+2. From `engine/`: `npm run new-video -- <slug>`. Copy the source into `video-projects/<slug>/assets/`
+   with its original extension and keep that copy unchanged. Probe its pixel format, color primaries, transfer
+   function, matrix, and rotation before preparing a renderer-compatible `raw.mp4`. Read
+   `references/color-and-captions.md` for HDR/HLG/PQ/Dolby Vision sources. Keep the original as the render master;
+   do not silently convert it to 8-bit SDR or assume that changing the container preserves its appearance.
+3. `python3 <skill-dir>/scripts/transcribe.py <project>/assets/<source-file> --language <code> --out <project>/assets/raw.json`
+   (Taglish: `--language tl --secondary en`). This accepts the original source, writes `raw.json`, and replaces
+   the engine's ElevenLabs step. Fix names and obvious mishearings in the word texts; never translate.
 4. Read `my-video-style.md`. Rules beat style; style beats the engine's house style. Unless the profile or
    request says otherwise, this default also beats the engine's house style:
    - **The speaker stays in the scene.** When someone talks to the camera, keep them visible for the whole
@@ -81,12 +91,16 @@ sends footage elsewhere (ElevenLabs, Kie.ai, any cloud API). The default is to u
 5. Read `engine/AGENTS.md`, then follow the engine skill `short-form-edit` for vertical or short videos (under
    3 minutes) or `edit-video` for long horizontal ones. It runs `cut-silences` and `cut-mistakes`; "edit this"
    approves the mistake cuts, so decide each candidate yourself (keep deliberate repetition) and mention notable
-   cuts in your summary. Pace natural: pass a larger `--gap` (about 1.2) to `cut-silences`. Mistakes kept: skip
-   `cut-mistakes`. Use the user's own footage; clips they call B-roll are B-roll. Use attached music and effects;
-   otherwise synthesize simple effects with ffmpeg or skip them. Never download music or footage you have no
-   right to use.
+   cuts in your summary. Pace natural: pass a larger `--gap` (about 1.2) to `cut-silences`, then review the
+   retained breaths: that option changes which pauses are cut, not how much breath remains at each join.
+   Mistakes kept: skip `cut-mistakes`. Use the user's own footage; clips they call B-roll are B-roll. Use attached
+   music and effects only when the profile allows them; for voice-only edits, add neither. Otherwise synthesize
+   simple effects with ffmpeg or skip them. Never download music or footage you have no right to use.
 6. Render a draft on one worker with low-memory mode if the sandbox is tight
-   (`npx hyperframes render --quality draft --workers 1 --low-memory-mode`), copy it to
+   (`npx hyperframes render --quality draft --workers 1 --low-memory-mode`). For HDR footage, use a verified
+   HDR-preserving export path; if the browser renderer changes its appearance, composite the graphics locally
+   over the original HDR source as described in `references/color-and-captions.md`. Inspect the encoded result,
+   including source-color fidelity outside overlays and caption readability, then copy it to
    `outbox/<slug>-v1.mp4` and present it. Tell the user in 3 to 5 short bullets what you did, then ask for notes.
 
 ## Notes become rules

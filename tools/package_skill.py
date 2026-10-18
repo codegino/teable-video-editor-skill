@@ -9,7 +9,7 @@ NAME = 'teable-video-editor'
 FILES = [
     'SKILL.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
     'scripts/setup.mjs', 'scripts/transcribe.py',
-    'examples/code-gino.md',
+    'examples/code-gino.md', 'references/color-and-captions.md',
 ]
 
 
