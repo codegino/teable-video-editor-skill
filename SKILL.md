@@ -67,16 +67,13 @@ and draft render. Do not stop for approval between steps. Ask first only for any
 sends footage elsewhere (ElevenLabs, Kie.ai, any cloud API). The default is to use none of them.
 
 1. Run setup if `engine/` is missing. Make a slug from the file name plus today's date. Never modify the original.
-2. From `engine/`: `npm run new-video -- <slug>`. Write the source to `video-projects/<slug>/assets/raw.mp4`
-   (copy if it is H.264 SDR MP4; otherwise transcode with ffmpeg; convert HLG/PQ/Dolby Vision to Rec.709 SDR).
+2. From `engine/`: `npm run new-video -- <slug>`. Copy the source to `video-projects/<slug>/assets/raw.mp4`
+   (transcode with ffmpeg if it is not MP4, with no filters).
 3. `python3 <skill-dir>/scripts/transcribe.py engine/video-projects/<slug>/assets/raw.mp4 --language <code>`
    (Taglish: `--language tl --secondary en`). This writes `raw.json` and replaces the engine's ElevenLabs step.
    Fix names and obvious mishearings in the word texts; never translate.
 4. Read `my-video-style.md`. Rules beat style; style beats the engine's house style. Unless the profile or
-   request says otherwise, these defaults also beat the engine's house style:
-   - **Light and color stay natural.** Do not grade, relight or restyle the footage: no exposure, contrast,
-     saturation, LUT or filter changes. Only HDR-to-SDR conversion, plus a small white-balance or exposure fix
-     when the source is clearly off. A chosen look (warm, cool, ...) stays subtle; compare against the source frame.
+   request says otherwise, this default also beats the engine's house style:
    - **The speaker stays in the scene.** When someone talks to the camera, keep them visible for the whole
      video. Put graphics, cards and B-roll in overlays, a split screen or an inset beside or around them, not
      full-frame takeovers or cutaways. Never cover the face. Zoom-ins keep the whole face in frame. Full-screen
