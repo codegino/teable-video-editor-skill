@@ -1,3 +1,2 @@
-# Optional: needed only for the transcribe subcommand.
-# Runtime instructions and tests use the Python standard library.
+# Needed by scripts/transcribe.py (local word-level transcription).
 faster-whisper>=1.1,<2

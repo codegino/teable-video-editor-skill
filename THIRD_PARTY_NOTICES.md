@@ -2,7 +2,7 @@
 
 ## Herk Edit Kit
 
-This skill's editing guidance is informed by [nateherkai/herk-edit-kit](https://github.com/nateherkai/herk-edit-kit), with implementation references based on revision `10511e5af86fc47756ea89803b397422e2d89284`. It is an independently packaged skill, not an official release or a fork of that repository. The original repository, its example projects, third-party brand materials and personal footage are not vendored here.
+This skill installs and runs [nateherkai/herk-edit-kit](https://github.com/nateherkai/herk-edit-kit) at revision `10511e5af86fc47756ea89803b397422e2d89284` (cloned at setup into the user's sandbox; not vendored here). It is an independently packaged skill, not an official release or a fork of that repository. The setup approach follows [riecodes/free247editor](https://github.com/riecodes/free247editor).
 
 For attribution to the referenced MIT-licensed workflow material:
 
@@ -32,4 +32,4 @@ For attribution to the referenced MIT-licensed workflow material:
 
 FFmpeg, faster-whisper, downloaded speech models, HyperFrames, GSAP, browser runtimes and any fonts/media used during a job retain their own licenses. They are not distributed in this repository or in its `.skill` archive. Installing or referencing them does not relicense them under this project's MIT license.
 
-The Code Gino name, website and handle are a configurable personal branding preset. The source-code license does not imply endorsement of third-party videos or transfer ownership of branding, footage or third-party assets.
+The Code Gino name, website and handle in `examples/code-gino.md` are an example profile. The source-code license does not imply endorsement of third-party videos or transfer ownership of branding, footage or third-party assets.

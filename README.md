@@ -19,22 +19,45 @@ A ready-to-install [skill file](dist/teable-video-editor.skill) is also included
 
 ## Create your style once
 
-The skill asks about your video format, language, captions, branding, pacing, effects and sound. If you attach a video, its metadata helps suggest technical defaults. You can also set up a profile without a video.
+The skill asks a few short rounds of questions about format, language, captions, pacing, effects, sound, color
+and branding. If you attach a video, it can show you a short caption sample on your own footage.
 
-You'll receive a **Markdown style profile**. Save it. In a fresh chat, attach the profile with your next recording and say:
+You'll receive a **Markdown style profile** (`my-video-style.md`): plain bullets you can read and edit. Save it.
+In a fresh chat, attach it with your next recording and say:
 
-> Use this profile to edit my video.
+> Edit this.
 
-An attached profile skips setup. To change it, say “Update my profile.” For a temporary change, say “For this video only.”
+For a one-off change, say “For this video only.”
+
+## How it edits
+
+On first use in a chat, the skill installs the editing engine,
+[Herk Edit Kit](https://github.com/nateherkai/herk-edit-kit), into the sandbox and lets its own editing skills do
+the work. Your profile overrides its house style:
+
+| | |
+| --- | --- |
+| Cuts | Removes dead air, breaths, false starts and retakes |
+| Hook | Big text in the first 3 seconds |
+| Motion graphics | Animated cards and overlays, plus zoom-ins that keep your face clear |
+| Captions | Natural phrases, word by word, key words, subtitles or none, in your position and colors |
+| Color | Natural, warm, cool, black and white, or orange and teal |
+| Sound | Light sound effects and a quiet music bed from music you attach |
+
+Speech is transcribed inside the sandbox; your footage is not sent to a transcription service.
+
+## Notes become rules
+
+Watch the draft and give notes in plain words (English, Tagalog, Taglish). Lasting notes (“always…”, “never…”) are
+saved in your profile under **My rules** and applied to every future edit. Attach the updated profile next time.
 
 ## What to expect
 
 - Tagalog, English or Taglish, with your original voice preserved.
 - Vertical, landscape or square videos.
-- Captions, branding and effects based on your preferences.
-- An edited MP4, with subtitles and an editable project when selected.
+- Drafts as MP4 (`v1`, `v2`, …), then a final MP4, with subtitles and an editable project if your profile asks for them.
 
-Review the result before sharing. The skill does not automatically publish your videos. Your profile keeps preferences consistent; individual creative edits can still vary.
+Review the result before sharing. The skill does not publish your videos.
 
 ## Credits
 

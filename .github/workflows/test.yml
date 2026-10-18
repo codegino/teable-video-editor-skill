@@ -1,4 +1,4 @@
-name: Test skill helpers
+name: Check skill
 
 on:
   push:
@@ -9,24 +9,20 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11', '3.12']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Test helper and portable-profile behavior
-        run: python -m unittest discover -s scripts -p 'test_*.py'
-      - name: Smoke-test profile reuse and SRT export
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check scripts
         run: |
-          python scripts/style_profile.py build --answers examples/profile-answers.synthetic.json --out /tmp/my-video-style.md
-          python scripts/style_profile.py import /tmp/my-video-style.md --out /tmp/job-style.json
-          python scripts/style_profile.py import examples/code-gino.md --out /tmp/code-gino-job-style.json
-          python scripts/video_tools.py captions examples/transcript.synthetic.json --style /tmp/job-style.json --out-dir /tmp/caption-demo
+          node --check scripts/setup.mjs
+          python -m py_compile scripts/transcribe.py
       - name: Build installable package
         run: python tools/package_skill.py
       - name: Check committed package matches source
@@ -37,7 +33,6 @@ jobs:
           python tools/package_skill.py
           cmp /tmp/first.skill dist/teable-video-editor.skill
       - uses: actions/upload-artifact@v4
-        if: matrix.python-version == '3.11'
         with:
           name: teable-video-editor-skill
           path: dist/teable-video-editor.skill

@@ -1,76 +1,102 @@
 ---
 name: teable-video-editor
-description: "Edit uploaded talking-head videos in Tagalog, English, or Taglish using portable Markdown style profiles. Use for /teable-video-editor, uploaded-video editing, the Herk workflow, creating a style/profile through a questionnaire, reusing an attached profile, or updating saved editing preferences. Suggest technical defaults from video metadata, preserve original speech, and demonstrate explicitly requested effects. Deliver the selected MP4/subtitle/project outputs with playback checks. Not for video summaries, text-only scripts, voice synthesis alone or public posting alone."
+description: "The user's personal video editor for talking-head videos in Tagalog, English or Taglish. Use for /teable-video-editor, \"edit this\", \"edit mo to\", an uploaded video to edit, notes on a draft (\"faster\", \"bigger captions\", \"approved\", \"final\"), a horizontal or YouTube version, or creating, reusing or changing the user's style profile. Runs scripts/setup.mjs, local transcription and the Herk Edit Kit pipeline in engine/, delivers drafts, and saves lasting notes as rules in the user's profile."
 ---
 
-# Teable video editor
+# Teable video editor: the user's personal video editor
 
-Turn the user's attached footage into a completed, reviewable edit. Apply the saved style without making the user repeat it. Use their actual footage and voice; no synthetic replacement narration unless requested.
+You are the user's video editor. They record; you edit. Talk in plain words and in the language they
+use (English, Tagalog or Taglish are all normal). Never assume they know editing or coding terms.
 
-## Read first
+## Layout
 
-Read `references/profile-setup.md` first. Resolve **Create a profile** versus **Reuse a profile** before editing; skip that question if the request or an attached profile already resolves it. A setup-only request can finish without video. New profiles use an adaptive questionnaire, with metadata-informed technical suggestions when footage is present. Generate and present a portable Markdown file users can attach in a fresh session.
+| Path | What it is |
+| --- | --- |
+| `<skill-dir>/scripts/setup.mjs` | One-time setup per sandbox. Safe to re-run. |
+| `<skill-dir>/scripts/transcribe.py` | Local word-level transcription (faster-whisper). |
+| `/tmp/video-editor/engine/` | The editing engine, Herk Edit Kit, installed by setup. Never edit files in it. |
+| `/tmp/video-editor/outbox/` | Drafts and finals, named `<slug>-v1.mp4`, `<slug>-final.mp4`. |
+| `my-video-style.md` | The user's style and rules. The user keeps it and attaches it each session. |
+| `examples/code-gino.md` | An example profile. Use it only when the user attaches or picks it. |
 
-The selected Markdown profile, resolved into the job's `job-style.json` (`references/defaults.json` → content-type preset from `references/content-types.json` → profile → per-video changes), is authoritative. Profiles store only the user's choices and tunable overrides; the editing rules in this file are not profile settings. `examples/code-gino.md` is an example profile, not a built-in preset. Current per-video requests override the selected profile without changing it. Read `references/editing-workflow.md` for implementation and `references/effects-and-branding.md` for demonstrations.
+`engine/` has its own guide, `engine/AGENTS.md`, and skills in `engine/.agents/skills/<name>/SKILL.md`. Read them
+when a step says so. Paths in engine docs are relative to `engine/`, so run engine commands from there.
 
-Begin with one short action statement, then work. Request footage only when needed for an actual edit. A video attached for setup can inform defaults without being rendered.
+## Setup (first edit in a sandbox, or engine/ is missing)
 
-### Resolve consequential ambiguity only
+1. Say in one line that you will set things up, then run `node <skill-dir>/scripts/setup.mjs`.
+   If it stops on missing tools, install them and re-run. If faster-whisper is missing, run
+   `python3 -m pip install faster-whisper`.
+2. If a render later fails, run `npx hyperframes doctor` in the project folder and fix what it reports
+   (usually Chrome or shared memory).
 
-- Honor an explicit language in the request, then the profile's `language` (`primary`, `secondary`, `mode`). Ask only if `mode` is `ask` or it is unclear; do not infer language from appearance, nationality or filenames.
-- A single fixed language passes its code to Whisper (for example `tl` or `en`), `task='transcribe'`. `auto`, or any non-empty `secondary` list (mixed speech such as Taglish = `tl` + `en`), uses automatic detection and preserves code-switching. Do not translate.
-- Multiple clips: one edit per clip unless asked to merge. If merged, use the specified order or attachment order and retain source IDs in the EDL.
-- For advice, explain without editing. For a saved-style update, regenerate the portable Markdown profile, not the skill package or an old video.
-- Treat narration describing desired editing effects as an editing brief when the footage is a test/demo or the user asks to apply those effects. Describing an effect in unrelated footage is not automatically a request to demonstrate it.
+## Style profile
 
-## Editorial defaults (selected profile overrides these)
+No profile attached? Ask once: **Create a profile** or **Reuse a profile** (skip if the request answers it).
+Reuse without a file: ask them to attach it. Setup without a video is fine.
 
-**Normal captions are readable chunks.** Show the complete short phrase together, usually 3–6 words, one or two lines. Do not default to word-by-word popping, progressive word reveals or moving karaoke highlights. Reserve single-word styling for isolated deliberate emphasis or an explicit request.
+To create one, ask two or three rounds of short multiple-choice questions (A, B, C; recommended first):
 
-**Effects must visibly do what they say.** A card labeled “glassmorphism” is not a glass effect. Using the repository's renderer is not the same as applying its editing workflow. Match each requested effect to a spoken cue, implement it, and verify it in the final MP4. A request for a subtle intro/outro governs the branding, not the intensity of effects requested elsewhere.
+- Format: vertical 9:16 for Reels, TikTok, Shorts (default), horizontal 16:9, square, or both.
+- Language: Taglish, English, Tagalog, or ask each video.
+- Captions: natural phrase chunks (default: 3 to 6 words shown together), word by word, bold key words,
+  full-sentence subtitles, or none. Position: upper third (default, clear of app buttons), middle, or lower
+  third. Colors: white with shadow, a brand color, or a highlight color on key words.
+- Hook: big text in the first 3 seconds, or none.
+- Pace: tight (cut every pause and breath, default) or natural (keep short pauses).
+- Mistakes: cut retakes, false starts and stutters (default), or keep everything said.
+- Graphics: editor's house style with motion cards and zoom-ins (default), some, or minimal.
+- Color: natural, warm, cool, black and white, or orange and teal.
+- Sound: light sound effects plus a quiet music bed (default), effects only, or voice only.
+- Branding: none, or name, handle or website, colors, intro and/or outro.
+- Deliverables: MP4, plus SRT subtitles and/or the editable project.
 
-**Branding comes from the selected profile.** Respect the branding and individual intro/outro switches. Use its exact colors, website, handle and timing; never add another creator's identity (such as the Code Gino example) to a user's edit. Keep any opening over live footage so speech starts promptly. A hook can be unbranded. No persistent watermark unless requested.
+If a video is attached, render a 5-second sample of their captions on their own footage and adjust before saving.
+Write `my-video-style.md` as short plain bullets, one per choice, in the user's words where they gave them,
+then a `## My rules` section (empty at first). Present it and say: "Save this file. Next time, attach it with
+your video and say: edit this." An older profile with a JSON settings block: read its choices, rewrite it in
+this format, and present the new file.
 
-## Workflow
+## Editing: "edit this", "edit mo to", or an uploaded video
 
-1. **Inspect and preserve.** Use local attachment paths; never redownload or modify originals. Make a unique `/tmp` job with a manifest. Probe display size, rotation, duration, frame rate, audio and HDR tags. Preserve the real duration; no arbitrary cap.
-2. **Normalize footage.** Convert supported HLG/PQ/Dolby Vision base layers to Rec.709 SDR before grading; do not tone-map SDR. Frame at the profile's width and height. Preserve all visible people and meaningful gestures; use contain plus a soft blurred backdrop if cropping would lose content. Upscaling does not create detail.
-3. **Transcribe locally.** Use `scripts/video_tools.py transcribe` with word timestamps; cache raw results. Prefer multilingual medium for Tagalog/Taglish. If a smaller local model is necessary, disclose reduced review confidence. Cloud transcription is not an automatic fallback; model downloads send no footage to a speech service.
-4. **Review wording.** Check names, switching languages, uncertain phrases and timestamps. Keep original ASR separate from corrected display text. Retry questionable spans. Do not invent names or claim listening based on ASR. Leave genuinely uncertain filler uncaptioned with audio intact and record the omission; clarify essential ambiguous wording. Join supported tokenizer fragments, not arbitrary words.
-5. **Plan cuts and effects together.** Run `scripts/video_tools.py plan --style /tmp/job/job-style.json`, review the proposed EDL and preserve breaths, speech edges, retakes and meaningful child interaction. No filler/retake deletion by default. Save the authoritative EDL. For demonstrations, create `effects.json` using the mapping in `effects-and-branding.md`; sparse-graphics defaults do not suppress requested effects.
-6. **Prepare the media timeline.** Apply the same keep ranges to video/audio, reset timestamps and resample before concat. Lightly filter rumble and normalize speech. Never clip phonemes with fades or replace speech with silence. If source speed/overlap changes, retime all words and effects from the final EDL. Text-animation speed requests change the text animation, not the voice.
-7. **Design the visible layer.** Write DESIGN.md from the JSON. Integrate a truthful short hook if enabled, and branding only when enabled. Implement relevant motion, real B-roll, webpage highlights, glass panels or charts according to the brief. Label illustrative data and distinguish animated AI images from generated video. Use the profile's outro only when enabled. No unrelated stock footage, invented claims or decorative logos.
-8. **Build captions in the selected mode.** Skip visible captions and SRT when mode is `off`; honor `single_word` when selected. For phrase mode, run `scripts/video_tools.py captions --style /tmp/job/job-style.json` on reviewed, retimed words. The helper proposes phrase chunks at punctuation, pauses, duration/length caps and manual `break_before`/`break_after` boundaries. Review grammar and avoid splitting names or tightly connected phrases. Keep all words in a chunk visible for that event; time it from the first onset to the last offset, with only a short bounded hold. One chunk at a time, no overlapping captions. Render white text with a dark shadow, a restrained whole-chunk entrance and at most two lines. Use the actual font to check width; adjust grouping before shrinking excessively. Preserve measured word timings even though words display together.
-9. **Place captions around the action.** Check faces, hands, children, effect cards and platform controls throughout the sequence. Move a whole chunk to clear negative space; split at a reviewed spatial boundary if needed. The default raised position is not automatically safe. Do not move text onto a face. Use a reserved band or relocate graphics if no area is clear.
-10. **Transitions, grade and sound.** Follow the profile's `transitions.style`, `color.style`, `audio.mix` and `audio.sound_effects`; an off/neutral selection must not receive preset effects. When enabled, apply transitions at suitable seams and animate visual wrappers, never video playback. Preserve speech timing. Convert HDR before grading. Keep enabled/requested instrumental music quiet beneath the voice and retain that choice across revisions. Never add a pop per caption word. Measure final loudness and true peak after encoding.
-11. **Render and inspect.** Prefer Herk/HyperFrames when practical; report a real FFmpeg fallback if needed. Export browser-compatible H.264/AAC, fast-start MP4, using the JSON bitrate as a starting point. Inspect actual rendered effects and caption chunks, not just successful lint. Apply the verification gates below and fix failures before delivery.
-12. **Deliver.** Present the MP4 first; add matching SRT and editable ZIP only when selected. For an editable ZIP, include composition/scripts, prepared media, style snapshot, EDL, effect map, transcripts, licenses and VERIFY.md. Exclude originals, caches, node_modules, credentials and unrelated files. State duration, implemented effects and review limitations. No publishing, Drive upload or recurring automation unless separately requested.
+The request approves the whole sandbox pipeline: transcription, silence and mistake cuts, design, preview
+and draft render. Do not stop for approval between steps. Ask first only for anything that costs money or
+sends footage elsewhere (ElevenLabs, Kie.ai, any cloud API). The default is to use none of them.
 
-## Verification gates
+1. Run setup if `engine/` is missing. Make a slug from the file name plus today's date. Never modify the original.
+2. From `engine/`: `npm run new-video -- <slug>`. Write the source to `video-projects/<slug>/assets/raw.mp4`
+   (copy if it is H.264 SDR MP4; otherwise transcode with ffmpeg; convert HLG/PQ/Dolby Vision to Rec.709 SDR).
+3. `python3 <skill-dir>/scripts/transcribe.py engine/video-projects/<slug>/assets/raw.mp4 --language <code>`
+   (Taglish: `--language tl --secondary en`). This writes `raw.json` and replaces the engine's ElevenLabs step.
+   Fix names and obvious mishearings in the word texts; never translate.
+4. Read `my-video-style.md`. Rules beat style; style beats the engine's house style.
+5. Read `engine/AGENTS.md`, then follow the engine skill `short-form-edit` for vertical or short videos (under
+   3 minutes) or `edit-video` for long horizontal ones. It runs `cut-silences` and `cut-mistakes`; "edit this"
+   approves the mistake cuts, so decide each candidate yourself (keep deliberate repetition) and mention notable
+   cuts in your summary. Pace natural: pass a larger `--gap` (about 1.2) to `cut-silences`. Mistakes kept: skip
+   `cut-mistakes`. Use the user's own footage; clips they call B-roll are B-roll. Use attached music and effects;
+   otherwise synthesize simple effects with ffmpeg or skip them. Never download music or footage you have no
+   right to use.
+6. Render a draft on one worker with low-memory mode if the sandbox is tight
+   (`npx hyperframes render --quality draft --workers 1 --low-memory-mode`), copy it to
+   `outbox/<slug>-v1.mp4` and present it. Tell the user in 3 to 5 short bullets what you did, then ask for notes.
 
-- `ffprobe`: expected H.264/AAC, profile dimensions, yuv420p, duration, frame rate, rotation and SDR tags. Check `moov` precedes `mdat` for fast start.
-- Full decode, first/last frames, contact sheets and contiguous transition strips; no missing tail, unexplained black frames or stuck source playback.
-- Run freeze detection over the full export. Distinguish deliberate graphic holds from source-video freezes. If a user reports a stopping point, inspect a multi-second region around it with video-only frame hashes (`-an`) and frame strips, plus later footage and the ending. File duration or distinct audio hashes do not prove video motion. Unique video frames alone do not prove their browser player issue is fixed; state what was actually verified.
-- Each requested effect has an entry in `effects.json`, correct timing, an actual implementation and inspection evidence. Explain any substitution or missing capability instead of claiming completion.
-- One caption chunk visible at a time; no overlap, truncation or excessive lines. Validate timing and complete reviewed-word coverage against the EDL. An explicit single-word override is tested against that mode, not the phrase default.
-- Preserve all protected spoken intervals; regenerate mappings when timing changes. Inspect source framing and the final caption/effect positions.
-- Measure encoded mix loudness/true peaks. Audibly check joins when playback is available; state when no listening pass is possible.
-- HyperFrames: lint, browser validation, resource-appropriate worker count and inspection of the actual MP4. Record meaningful warnings and limitations in VERIFY.md; successful lint alone proves neither quality nor playback.
+## Notes become rules
 
-## Update the profile or the skill
+- Apply each note, render the next version (`-v2`, `-v3`, ...) and present it.
+- When a note is a lasting preference (it says always or never, it is about style, or the same kind of note
+  comes twice), add it under `## My rules` as one rule plus the user's exact words and the date. Confirm in
+  one line ("Saved as a rule: ..."), present the updated `my-video-style.md` and say "Attach this version next
+  time." Never write rules into `engine/`; it is reinstalled per sandbox.
+- "For this video only" changes are not saved.
+- When the user approves ("ok na", "approved", "final"), render at final quality to `outbox/<slug>-final.mp4`,
+  plus the SRT and editable project if the profile asks for them.
+- "Horizontal version" or "for YouTube": compose 1920x1080 with its own framing and text placement, as
+  `short-form-edit` describes. Not just a crop.
 
-Style changes regenerate the user's portable Markdown via `style_profile.py`; no skill reinstall is required. Present the revised file and remind them to attach that version in new sessions. Never claim automatic cross-session recall.
+## Never
 
-For implementation changes to the skill itself, stage the installed skill under `/tmp`, keep `name: teable-video-editor`, update helpers/tests/references consistently, validate and package. Present the `.skill` replacement through the supported installation UI; do not claim installation before it succeeds.
-
-No footage, screenshots, recordings, credentials or binary assets belong in the skill package. Defaults and helper code are text-only; dependencies may need reinstalling after sandbox recreation.
-
-## Quick requests
-
-- `/teable-video-editor` — choose Create or Reuse if no profile is selected.
-- “Create my style profile; use this video for metadata suggestions.”
-- “Use this attached profile with this Taglish video.”
-- “English. Edit these clips separately in my usual style.”
-- “Tagalog. Demonstrate the effects I describe; keep the intro/outro subtle.”
-- “For this clip only, use one-word captions.”
-- “Change my saved caption color; keep everything else.”
+- Post, upload or send a video anywhere.
+- Replace the user's voice or invent narration, claims or data.
+- Put another creator's branding (such as the Code Gino example) on a user's video.
+- Claim you remember the user between chats: the attached profile is the memory.

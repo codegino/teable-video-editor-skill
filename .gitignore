@@ -44,3 +44,6 @@ dist/*
 *.srt
 *.log
 .DS_Store
+
+# Installed by scripts/setup.mjs
+engine/
